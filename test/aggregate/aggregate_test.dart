@@ -1,7 +1,24 @@
 import 'package:eventuous_simplified/eventuous_simplified.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:test/test.dart';
 
-part 'example_aggregate.freezed.dart';
+void main() {
+  test('new events are added to changes', () {
+    final aggregate = BookingAggregate();
+    aggregate.book(12);
+
+    expect(aggregate.changes, equals([Booked(bookingId: 'anId', price: 12)]));
+  });
+
+  test('the state gets updated', () {
+    final aggregate = BookingAggregate();
+    aggregate.book(12);
+
+    expect(
+      aggregate.currentState,
+      equals(BookingState(id: BookingId('anId'), price: 12)),
+    );
+  });
+}
 
 class BookingAggregate
     extends AggregateWithStateAndId<BookingState, BookingId, BookingEvent> {
@@ -54,12 +71,18 @@ class BookingId {
   String toString() => id;
 }
 
-@freezed
-class BookingState with _$BookingState, StateWithId<BookingId> {
-  BookingState._();
-  factory BookingState({required BookingId? id, required int price}) =
-      _BookingState;
+class BookingState implements StateWithId<BookingId> {
+  @override
+  final BookingId? id;
+  final int price;
+
+  BookingState({required this.id, required this.price});
+
   factory BookingState.initial() => BookingState(id: null, price: 0);
+
+  BookingState copyWith({BookingId? id, int? price}) {
+    return BookingState(id: id ?? this.id, price: price ?? this.price);
+  }
 
   BookingState onBooked(Booked event) =>
       copyWith(id: BookingId(event.bookingId), price: event.price);

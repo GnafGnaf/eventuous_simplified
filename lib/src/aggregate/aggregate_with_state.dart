@@ -11,6 +11,7 @@ abstract class AggregateWithState<State, Event> extends Aggregate<Event> {
   int get currentVersion => currentState.version;
 
   @protected
+  @visibleForTesting
   late Versioned<State> currentState = initialState;
 
   AggregateWithState({required State initialState})
