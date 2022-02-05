@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/eventuous_simplified.dart';
+import 'package:eventuous_simplified/src/exceptions/domain_exception.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
@@ -32,6 +33,18 @@ void main() {
       equals(0),
     );
   });
+
+  test('checks if exists', () {
+    final aggregate = BookingAggregate();
+    aggregate.book(12);
+    expect(() => aggregate.book(23), throwsA(isA<DomainException>()));
+  });
+
+  test('checks if not exists', () {
+    final aggregate = BookingAggregate();
+
+    expect(() => aggregate.changePrice(12), throwsA(isA<DomainException>()));
+  });
 }
 
 class BookingAggregate
@@ -45,8 +58,8 @@ class BookingAggregate
     registry.on<Booked>(
       (previousState, event) => previousState.onBooked(event),
     );
-    registry.on<Imported>(
-      (previousState, event) => previousState.onImported(event),
+    registry.on<PriceChanged>(
+      (previousState, event) => previousState.onPriceChanged(event),
     );
   }
 
@@ -55,9 +68,9 @@ class BookingAggregate
     apply(Booked(bookingId: 'anId', price: price));
   }
 
-  import(String id) {
-    ensureDoesntExist();
-    apply(Imported(bookingId: id));
+  changePrice(int newPrice) {
+    ensureExists();
+    apply(PriceChanged(newPrice: newPrice));
   }
 }
 
@@ -74,13 +87,13 @@ class Booked extends BookingEvent {
   List<Object> get props => [bookingId, price];
 }
 
-class Imported extends BookingEvent {
-  final String bookingId;
+class PriceChanged extends BookingEvent {
+  final int newPrice;
 
-  Imported({required this.bookingId});
+  PriceChanged({required this.newPrice});
 
   @override
-  List<Object?> get props => [bookingId];
+  List<Object?> get props => [newPrice];
 }
 
 class BookingId extends Equatable {
@@ -111,8 +124,8 @@ class BookingState extends Equatable implements StateWithId<BookingId> {
   BookingState onBooked(Booked event) =>
       copyWith(id: BookingId(event.bookingId), price: event.price);
 
-  BookingState onImported(Imported event) =>
-      copyWith(id: BookingId(event.bookingId));
+  BookingState onPriceChanged(PriceChanged event) =>
+      copyWith(price: event.newPrice);
 
   @override
   List<Object?> get props => [id, price];
