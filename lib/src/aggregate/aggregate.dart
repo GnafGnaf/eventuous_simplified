@@ -1,8 +1,9 @@
 import 'package:meta/meta.dart';
 
 import '../exceptions/exceptions.dart';
+import 'aggregate_library.dart';
 
-abstract class Aggregate<Event> {
+abstract class Aggregate<Event extends DomainEvent> {
   final _changes = <Event>[];
 
   List<Event> get changes => [..._changes];

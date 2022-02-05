@@ -6,4 +6,5 @@ export 'src/aggregate/aggregate_library.dart'
         AggregateWithState,
         AggregateWithStateAndId,
         StateWithId,
-        EventHandlerRegistry;
+        EventHandlerRegistry,
+        DomainEvent;

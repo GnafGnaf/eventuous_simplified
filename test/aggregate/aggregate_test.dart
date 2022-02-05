@@ -71,7 +71,7 @@ class BookingAggregate
 }
 
 @immutable
-abstract class BookingEvent extends Equatable {}
+abstract class BookingEvent extends DomainEvent with EquatableMixin {}
 
 class Booked extends BookingEvent {
   final String bookingId;
@@ -81,6 +81,18 @@ class Booked extends BookingEvent {
 
   @override
   List<Object> get props => [bookingId, price];
+
+  @override
+  deserialize(String serialized) {
+    // TODO: implement deserialize
+    throw UnimplementedError();
+  }
+
+  @override
+  String serialize() {
+    // TODO: implement serialize
+    throw UnimplementedError();
+  }
 }
 
 class PriceChanged extends BookingEvent {
@@ -90,6 +102,18 @@ class PriceChanged extends BookingEvent {
 
   @override
   List<Object?> get props => [newPrice];
+
+  @override
+  deserialize(String serialized) {
+    // TODO: implement deserialize
+    throw UnimplementedError();
+  }
+
+  @override
+  String serialize() {
+    // TODO: implement serialize
+    throw UnimplementedError();
+  }
 }
 
 class BookingId extends Equatable {

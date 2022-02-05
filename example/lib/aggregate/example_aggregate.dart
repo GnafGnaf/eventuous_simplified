@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:eventuous_simplified/eventuous_simplified.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'example_aggregate.freezed.dart';
+part 'example_aggregate.g.dart';
 
 class BookingAggregate
     extends AggregateWithStateAndId<BookingState, BookingId, BookingEvent> {
@@ -26,19 +29,41 @@ class BookingAggregate
   }
 }
 
-abstract class BookingEvent {}
+abstract class BookingEvent extends DomainEvent<BookingEvent> {}
 
+@JsonSerializable()
 class Booked extends BookingEvent {
   final String bookingId;
   final int price;
 
   Booked({required this.bookingId, required this.price});
+
+  @override
+  BookingEvent deserialize(String serialized) {
+    return _$BookedFromJson(jsonDecode(serialized));
+  }
+
+  @override
+  String serialize() {
+    return jsonEncode(_$BookedToJson(this));
+  }
 }
 
+@JsonSerializable()
 class Imported extends BookingEvent {
   final String bookingId;
 
   Imported({required this.bookingId});
+
+  @override
+  BookingEvent deserialize(String serialized) {
+    return _$ImportedFromJson(jsonDecode(serialized));
+  }
+
+  @override
+  String serialize() {
+    return jsonEncode(_$ImportedToJson(this));
+  }
 }
 
 class BookingId {

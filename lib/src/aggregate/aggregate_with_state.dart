@@ -2,7 +2,8 @@ import 'package:meta/meta.dart';
 
 import 'aggregate_library.dart';
 
-abstract class AggregateWithState<State, Event> extends Aggregate<Event> {
+abstract class AggregateWithState<State, Event extends DomainEvent>
+    extends Aggregate<Event> {
   final EventHandlerRegistry<State, Event> _registry = EventHandlerRegistry();
 
   final Versioned<State> initialState;
