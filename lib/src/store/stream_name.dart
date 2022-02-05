@@ -1,4 +1,6 @@
-class StreamName {
+import 'package:equatable/equatable.dart';
+
+class StreamName extends Equatable {
   final String value;
 
   StreamName(this.value) {
@@ -12,6 +14,10 @@ class StreamName {
 
   @override
   String toString() => value;
+
+  @override
+  // TODO: implement props
+  List<Object?> get props => [value];
 }
 
 class InvalidStreamName implements Exception {

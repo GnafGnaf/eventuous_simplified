@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/eventuous_simplified.dart';
 import 'package:eventuous_simplified/src/store/in_memory_event_store.dart';
 import 'package:eventuous_simplified/src/store/store.dart';
@@ -6,22 +7,23 @@ import 'package:test/test.dart';
 void main() {
   late AggregateStore aggregateStore;
   late InMemoryEventStore eventStore;
+  late JsonEventSerializers serializers;
 
   setUp(() {
     final typeMap = TypeMap.instance();
     typeMap.addType<TestCreated>('test_created');
     eventStore = InMemoryEventStore();
-    final eventSerializer = JsonEventSerializers(
+    serializers = JsonEventSerializers(
       serializers: {
         TestCreated: JsonEventSerializer<TestCreated>(
-          toJson: (event) => (event as TestCreated).toJson(),
+          toJson: (event) => event.toJson(),
           fromJson: TestCreated.fromJson,
         )
       },
       typeMap: typeMap,
     );
 
-    aggregateStore = AggregateStore(eventStore, eventSerializer);
+    aggregateStore = AggregateStore(eventStore, serializers);
   });
 
   tearDown(() {
@@ -42,9 +44,20 @@ void main() {
 
       await aggregateStore.store(testAggregate);
 
+      final savedEvents = await eventStore.readEvents(
+        stream,
+        StreamReadPosition(0),
+        99,
+      );
+
+      final payload = savedEvents.single.payload as Serialized;
+
+      final savedEvent =
+          serializers.deserializeEvent(payload.payload, payload.eventType);
+
       expect(
-        eventStore.readEvents(stream, StreamReadPosition(0), 99),
-        equals([TestCreated('test')]),
+        savedEvent,
+        equals(TestCreated('test')),
       );
     });
 
@@ -71,7 +84,7 @@ class AggregateId {}
 
 class AggregateState {}
 
-class TestCreated {
+class TestCreated extends Equatable {
   final String test;
 
   TestCreated(this.test);
@@ -83,4 +96,7 @@ class TestCreated {
   Map<String, dynamic> toJson() {
     return {'test': test};
   }
+
+  @override
+  List<Object?> get props => [test];
 }
