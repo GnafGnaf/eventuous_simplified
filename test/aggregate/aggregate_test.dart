@@ -55,12 +55,8 @@ class BookingAggregate
   void registerEventHandlers(
     EventHandlerRegistry<BookingState, BookingEvent> registry,
   ) {
-    registry.on<Booked>(
-      (previousState, event) => previousState.onBooked(event),
-    );
-    registry.on<PriceChanged>(
-      (previousState, event) => previousState.onPriceChanged(event),
-    );
+    registry.on<Booked>(BookingState.onBooked);
+    registry.on<PriceChanged>(BookingState.onPriceChanged);
   }
 
   book(int price) {
@@ -121,11 +117,22 @@ class BookingState extends Equatable implements StateWithId<BookingId> {
     return BookingState(id: id ?? this.id, price: price ?? this.price);
   }
 
-  BookingState onBooked(Booked event) =>
-      copyWith(id: BookingId(event.bookingId), price: event.price);
+  factory BookingState.onBooked(
+    BookingState previousState,
+    Booked event,
+  ) {
+    return previousState.copyWith(
+      id: BookingId(event.bookingId),
+      price: event.price,
+    );
+  }
 
-  BookingState onPriceChanged(PriceChanged event) =>
-      copyWith(price: event.newPrice);
+  factory BookingState.onPriceChanged(
+    BookingState previousState,
+    PriceChanged event,
+  ) {
+    return previousState.copyWith(price: event.newPrice);
+  }
 
   @override
   List<Object?> get props => [id, price];

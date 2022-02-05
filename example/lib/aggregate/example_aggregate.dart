@@ -11,12 +11,8 @@ class BookingAggregate
   void registerEventHandlers(
     EventHandlerRegistry<BookingState, BookingEvent> registry,
   ) {
-    registry.on<Booked>(
-      (previousState, event) => previousState.onBooked(event),
-    );
-    registry.on<Imported>(
-      (previousState, event) => previousState.onImported(event),
-    );
+    registry.on<Booked>(BookingState.onBooked);
+    registry.on<Imported>(BookingState.onImported);
   }
 
   book(int price) {
@@ -61,9 +57,12 @@ class BookingState with _$BookingState, StateWithId<BookingId> {
       _BookingState;
   factory BookingState.initial() => BookingState(id: null, price: 0);
 
-  BookingState onBooked(Booked event) =>
-      copyWith(id: BookingId(event.bookingId), price: event.price);
+  factory BookingState.onBooked(BookingState previousState, Booked event) =>
+      previousState.copyWith(
+        id: BookingId(event.bookingId),
+        price: event.price,
+      );
 
-  BookingState onImported(Imported event) =>
-      copyWith(id: BookingId(event.bookingId));
+  factory BookingState.onImported(BookingState previousState, Imported event) =>
+      previousState.copyWith(id: BookingId(event.bookingId));
 }
