@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/eventuous_simplified.dart';
+import 'package:eventuous_simplified/src/aggregate/aggregate_library.dart';
 import 'package:eventuous_simplified/src/exceptions/domain_exception.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
@@ -9,7 +10,8 @@ void main() {
     final aggregate = BookingAggregate();
     aggregate.book(12);
 
-    expect(aggregate.changes, equals([Booked(bookingId: 'anId', price: 12)]));
+    expect(aggregate.changes,
+        equals([Booked(bookingId: 'anId', price: 12)]));
   });
 
   test('the state gets updated', () {
@@ -90,18 +92,6 @@ class PriceChanged extends BookingEvent {
 
   @override
   List<Object?> get props => [newPrice];
-
-  @override
-  deserialize(String serialized) {
-    // TODO: implement deserialize
-    throw UnimplementedError();
-  }
-
-  @override
-  String serialize() {
-    // TODO: implement serialize
-    throw UnimplementedError();
-  }
 }
 
 class BookingId extends Equatable {

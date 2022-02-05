@@ -1,5 +1,5 @@
 abstract class EventSerializer {
-  Serialized serializeEvent<T>(T event);
+  Serialized serializeEvent<T extends Object>(T event);
   Object deserializeEvent(String data, String eventType);
   String get contentType;
 }

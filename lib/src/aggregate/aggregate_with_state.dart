@@ -22,7 +22,7 @@ abstract class AggregateWithState<State> extends Aggregate {
   void registerEventHandlers(EventHandlerRegistry<State> registry);
 
   @override
-  void fold(Object event) {
+  void fold<T>(T event) {
     currentState = currentState.incrementVersion(
       _registry.when(currentState.data, event),
     );
@@ -36,8 +36,8 @@ abstract class AggregateWithState<State> extends Aggregate {
     originalVersion = currentState.version;
   }
 
-  void apply(Object event) {
-    addChange(event);
-    fold(event);
+  void apply<T>(T event) {
+    addChange<T>(event);
+    fold<T>(event);
   }
 }

@@ -15,9 +15,8 @@ class EventHandlerRegistry<State> {
     _handlers[T] = (previousState, event) => handler(previousState, event as T);
   }
 
-  State when(State currentState, Object event) {
-    final eventType = event.runtimeType;
-    var handler = _handlers[eventType];
+  State when<T>(State currentState, T event) {
+    var handler = _handlers[T] as EventHandler<State, T>?;
 
     if (handler == null) {
       return currentState;

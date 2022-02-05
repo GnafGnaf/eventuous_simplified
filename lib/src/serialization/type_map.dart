@@ -24,6 +24,14 @@ class TypeMap {
     return _typeToName.containsKey(T);
   }
 
+  String getNameForType(Type type) {
+    var name = _typeToName[type];
+    if (name == null) {
+      throw UnregisteredTypeException.fromType(type);
+    }
+    return name;
+  }
+
   String getTypeName<T>([T? object]) {
     var name = _typeToName[T];
     if (name == null) {

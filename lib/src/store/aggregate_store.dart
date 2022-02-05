@@ -15,7 +15,7 @@ class AggregateStore {
       return AppendEventsResult.noOp();
     }
 
-    final streamName = StreamName.forId<T>(aggregate.id ?? '');
+    final streamName = StreamName.forId<T>(aggregate.id);
     final expectedStreamVersion = ExpectedStreamVersion(
       aggregate.originalVersion,
     );
@@ -23,20 +23,19 @@ class AggregateStore {
     _eventStore.appendEvents(
       streamName,
       expectedStreamVersion,
-      _toStreamEvents(aggregate.changes),
+      [
+        ...aggregate.changes.map(
+          (change) {
+            return StreamEvent(
+              payload: _eventSerializer.serializeEvent(change),
+              contentType: _eventSerializer.contentType,
+              position: -1,
+            );
+          },
+        ),
+      ],
     );
 
     return AppendEventsResult.noOp();
-  }
-
-  Iterable<StreamEvent> _toStreamEvents(List<Object> events) {
-    return [
-      for (final event in events)
-        StreamEvent(
-          payload: _eventSerializer.serializeEvent(event),
-          contentType: _eventSerializer.contentType,
-          position: -1,
-        ),
-    ];
   }
 }

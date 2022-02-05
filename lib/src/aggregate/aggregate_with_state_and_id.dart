@@ -6,7 +6,7 @@ abstract class AggregateWithStateAndId<State extends StateWithId<Id>, Id>
       : super(initialState: initialState);
 
   @override
-  String? get id {
-    return currentState.data.id?.toString();
+  String get id {
+    return currentState.data.id?.toString() ?? '';
   }
 }

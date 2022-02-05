@@ -24,20 +24,23 @@ class JsonEventSerializers extends EventSerializer {
   }
 
   @override
-  Serialized serializeEvent<T>(T event) {
-    final eventTypeName = typeMap.getTypeName(event);
-    var eventType = typeMap.getType(eventTypeName);
-    var serializer = _serializers[eventType] as JsonEventSerializer<T>?;
+  Serialized serializeEvent<T extends Object>(T event) {
+    final typeOfEvent = event.runtimeType;
+    final eventTypeName = typeMap.getNameForType(typeOfEvent);
+    var serializer = _serializers[typeOfEvent];
     final payload = jsonEncode(serializer!.toJson(event));
     return Serialized(eventTypeName, payload);
   }
 }
 
-class JsonEventSerializer<Event> {
-  final ToJson<Event> toJson;
+class JsonEventSerializer<Event extends Object> {
+  final ToJson<Event> _toJson;
   final FromJson<Event> fromJson;
 
-  JsonEventSerializer({required this.toJson, required this.fromJson});
+  JsonEventSerializer({required ToJson<Event> toJson, required this.fromJson})
+      : _toJson = toJson;
+
+  Map<String, dynamic> toJson(Object event) => _toJson(event as Event);
 }
 
 typedef ToJson<Event> = Map<String, dynamic> Function(Event event);
