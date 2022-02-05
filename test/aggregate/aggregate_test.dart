@@ -1,4 +1,6 @@
+import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/eventuous_simplified.dart';
+import 'package:meta/meta.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -14,8 +16,20 @@ void main() {
     aggregate.book(12);
 
     expect(
-      aggregate.currentState,
+      aggregate.currentState.data,
       equals(BookingState(id: BookingId('anId'), price: 12)),
+    );
+  });
+
+  test('the state is versioned', () {
+    final aggregate = BookingAggregate();
+    expect(aggregate.currentState.version, equals(-1));
+
+    aggregate.book(12);
+
+    expect(
+      aggregate.currentState.version,
+      equals(0),
     );
   });
 }
@@ -38,7 +52,7 @@ class BookingAggregate
 
   book(int price) {
     ensureDoesntExist();
-    apply(Booked(bookingId: 'anId', price: 20));
+    apply(Booked(bookingId: 'anId', price: price));
   }
 
   import(String id) {
@@ -47,31 +61,41 @@ class BookingAggregate
   }
 }
 
-abstract class BookingEvent {}
+@immutable
+abstract class BookingEvent extends Equatable {}
 
 class Booked extends BookingEvent {
   final String bookingId;
   final int price;
 
   Booked({required this.bookingId, required this.price});
+
+  @override
+  List<Object> get props => [bookingId, price];
 }
 
 class Imported extends BookingEvent {
   final String bookingId;
 
   Imported({required this.bookingId});
+
+  @override
+  List<Object?> get props => [bookingId];
 }
 
-class BookingId {
+class BookingId extends Equatable {
   final String id;
 
   BookingId(this.id);
 
   @override
   String toString() => id;
+
+  @override
+  List<Object> get props => [id];
 }
 
-class BookingState implements StateWithId<BookingId> {
+class BookingState extends Equatable implements StateWithId<BookingId> {
   @override
   final BookingId? id;
   final int price;
@@ -89,4 +113,7 @@ class BookingState implements StateWithId<BookingId> {
 
   BookingState onImported(Imported event) =>
       copyWith(id: BookingId(event.bookingId));
+
+  @override
+  List<Object?> get props => [id, price];
 }

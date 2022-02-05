@@ -3,18 +3,16 @@ typedef EventHandler<State, Event> = State Function(
   Event event,
 );
 
-Type typeOf<TAggregate>() => TAggregate;
-
 class EventHandlerRegistry<State, Event> {
   final Map<Type, EventHandler<State, Event>> _handlers = {};
 
   on<T extends Event>(EventHandler<State, T> handler) {
-    if (_handlers.containsKey(typeOf<T>())) {
+    if (_handlers.containsKey(T)) {
       throw ArgumentError(
-        'Duplicate handler for event type ${typeOf<Event>()}',
+        'Duplicate handler for event type $T',
       );
     }
-    _handlers[typeOf<T>()] = handler as EventHandler<State, Event>;
+    _handlers[T] = (state, event) => handler(state, event as T);
   }
 
   State when(State currentState, Event event) {
