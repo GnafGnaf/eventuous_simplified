@@ -48,12 +48,12 @@ void main() {
 }
 
 class BookingAggregate
-    extends AggregateWithStateAndId<BookingState, BookingId, BookingEvent> {
+    extends AggregateWithStateAndId<BookingState, BookingId> {
   BookingAggregate() : super(initialState: BookingState.initial());
 
   @override
   void registerEventHandlers(
-    EventHandlerRegistry<BookingState, BookingEvent> registry,
+    EventHandlerRegistry<BookingState> registry,
   ) {
     registry.on<Booked>(BookingState.onBooked);
     registry.on<PriceChanged>(BookingState.onPriceChanged);

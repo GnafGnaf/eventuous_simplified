@@ -2,8 +2,8 @@ import 'package:meta/meta.dart';
 
 import 'aggregate_library.dart';
 
-abstract class AggregateWithState<State, Event> extends Aggregate {
-  final EventHandlerRegistry<State, Event> _registry = EventHandlerRegistry();
+abstract class AggregateWithState<State> extends Aggregate {
+  final EventHandlerRegistry<State> _registry = EventHandlerRegistry();
 
   final Versioned<State> initialState;
 
@@ -19,7 +19,7 @@ abstract class AggregateWithState<State, Event> extends Aggregate {
     registerEventHandlers(_registry);
   }
 
-  void registerEventHandlers(EventHandlerRegistry<State, Event> registry);
+  void registerEventHandlers(EventHandlerRegistry<State> registry);
 
   @override
   void fold(Object event) {

@@ -3,7 +3,7 @@ typedef EventHandler<State, Event> = State Function(
   Event event,
 );
 
-class EventHandlerRegistry<State, Event> {
+class EventHandlerRegistry<State> {
   final Map<Type, EventHandler<State, Object>> _handlers = {};
 
   on<T extends Object>(EventHandler<State, T> handler) {

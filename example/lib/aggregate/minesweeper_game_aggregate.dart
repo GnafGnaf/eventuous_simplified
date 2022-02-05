@@ -2,14 +2,14 @@ import 'package:eventuous_simplified/eventuous_simplified.dart';
 
 import 'minesweeper_game.dart';
 
-class MinesweeperGameAggregate extends AggregateWithStateAndId<
-    MinesweeperGameState, MinesweeperGameId, MinesweeperGameEvent> {
+class MinesweeperGameAggregate
+    extends AggregateWithStateAndId<MinesweeperGameState, MinesweeperGameId> {
   MinesweeperGameAggregate()
       : super(initialState: MinesweeperGameState.initial());
 
   @override
   void registerEventHandlers(
-    EventHandlerRegistry<MinesweeperGameState, MinesweeperGameEvent> registry,
+    EventHandlerRegistry<MinesweeperGameState> registry,
   ) {}
 
   void startGame() {
