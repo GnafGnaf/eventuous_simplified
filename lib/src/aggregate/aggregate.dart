@@ -1,24 +1,23 @@
 import 'package:meta/meta.dart';
 
 import '../exceptions/exceptions.dart';
-import 'aggregate_library.dart';
 
-abstract class Aggregate<Event extends DomainEvent> {
-  final _changes = <Event>[];
+abstract class Aggregate {
+  final _changes = [];
 
-  List<Event> get changes => [..._changes];
+  List<Object> get changes => [..._changes];
   void clearChanges() => _changes.clear();
 
   int originalVersion = -1;
   int currentVersion = -1;
 
-  void load(List<Event> events);
-  void fold(Event event);
+  void load(List<Object> events);
+  void fold(Object event);
 
   String? get id;
 
   @protected
-  void addChange(Event event) => _changes.add(event);
+  void addChange(Object event) => _changes.add(event);
 
   @protected
   void ensureDoesntExist({void Function()? orElse}) {

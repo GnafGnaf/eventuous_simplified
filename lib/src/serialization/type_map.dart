@@ -11,6 +11,10 @@ class TypeMap {
     return _instance!;
   }
 
+  void dispose() {
+    _instance = null;
+  }
+
   void addType<T>(String name) {
     _typeToName[T] = name;
     _nameToType[name] = T;
