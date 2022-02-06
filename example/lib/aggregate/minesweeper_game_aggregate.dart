@@ -9,29 +9,30 @@ import 'minesweeper_game.dart';
 
 class MinesweeperGameAggregate extends StatefulAggregate<MinesweeperGameState>
     with TypedId<MinesweeperGameState, MinesweeperGameId> {
-  void startGame({int mineCount = 10, Size? size}) {
-    ensureDoesntExist();
-
-    size ??= Size.square(mineCount);
-
-    apply(MinesweeperGameStarted(
-      id: MinesweeperGameId.generate().toString(),
-      minesAt: [
-        for (final mine
-            in _generateRandomMines(mineCount: mineCount, size: size))
-          FieldCoordinates(row: mine.row, column: mine.column)
-      ],
-      width: size.width,
-      height: size.height,
-    ));
-  }
-
   @override
   MinesweeperGameState createInitialState() => MinesweeperGameState.initial();
 
   @override
   void stateChanges(On<MinesweeperGameState> on) =>
       MinesweeperGameState.changes(on);
+
+  void startGame({int mineCount = 10, Size? size}) {
+    ensureDoesntExist();
+
+    size ??= Size.square(mineCount);
+    var mines = _generateRandomMines(mineCount: mineCount, size: size);
+    var id = MinesweeperGameId.generate().toString();
+
+    apply(MinesweeperGameStarted(
+      id: id,
+      minesAt: [
+        for (final mine in mines)
+          FieldCoordinates(row: mine.row, column: mine.column)
+      ],
+      width: size.width,
+      height: size.height,
+    ));
+  }
 
   void reveal({required int row, required int column}) {
     ensureExists();

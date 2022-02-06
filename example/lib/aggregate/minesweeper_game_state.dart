@@ -32,19 +32,6 @@ class MinesweeperGameState
     on<MinesweeperFieldRevealed>(onFieldRevealed);
   }
 
-  bool isMineAt({required int row, required int column}) {
-    var cell = minesAt
-        .firstWhereOrNull((cell) => cell.row == row && cell.column == column);
-
-    if (cell == null) return false;
-
-    return true;
-  }
-
-  bool areAllFieldsRevealed() {
-    return revealedAt.length + minesAt.length == width * height;
-  }
-
   static MinesweeperGameState onFieldRevealed(
     MinesweeperFieldRevealed event,
     MinesweeperGameState currentState,
@@ -70,5 +57,18 @@ class MinesweeperGameState
       width: event.width,
       height: event.height,
     );
+  }
+
+  bool isMineAt({required int row, required int column}) {
+    var cell = minesAt
+        .firstWhereOrNull((cell) => cell.row == row && cell.column == column);
+
+    if (cell == null) return false;
+
+    return true;
+  }
+
+  bool areAllFieldsRevealed() {
+    return revealedAt.length + minesAt.length == width * height;
   }
 }
