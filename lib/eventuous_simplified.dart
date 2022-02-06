@@ -1,12 +1,13 @@
 library eventuous_simplified;
 
-export 'src/aggregate/aggregate_library.dart'
+export 'src/aggregate/aggregate.dart'
     show
-        Aggregate,
-        AggregateWithState,
-        AggregateWithStateAndId,
-        StateWithId,
-        EventHandlerRegistry;
+        AggregateBase,
+        StatefulAggregate,
+        StatelessAggregate,
+        TypedId,
+        TypedIdState,
+        On;
 export 'src/serialization/serialization.dart'
     show
         JsonEventSerializers,

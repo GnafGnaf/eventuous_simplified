@@ -1,26 +1,31 @@
-typedef EventHandler<State, Event> = State Function(
-  State previousState,
+typedef StateChange<Event extends Object, State> = State Function(
   Event event,
+  State currentState,
+);
+
+typedef On<State> = void Function<Event extends Object>(
+  StateChange<Event, State> stateChange,
 );
 
 class EventHandlerRegistry<State> {
-  final Map<Type, EventHandler<State, Object>> _handlers = {};
+  final Map<Type, StateChange<Object, State>> _handlers = {};
 
-  on<T extends Object>(EventHandler<State, T> handler) {
-    if (_handlers.containsKey(T)) {
+  void on<Event extends Object>(StateChange<Event, State> stateChange) {
+    if (_handlers.containsKey(Event)) {
       throw ArgumentError(
-        'Duplicate handler for event type $T',
+        'Duplicate handler for event type $Event',
       );
     }
-    _handlers[T] = (previousState, event) => handler(previousState, event as T);
+    _handlers[Event] =
+        <E>(E event, currentState) => stateChange(event as Event, currentState);
   }
 
-  State when<T>(State currentState, T event) {
-    var handler = _handlers[T] as EventHandler<State, T>?;
+  State when<Event extends Object>(Event event, State currentState) {
+    var handler = _handlers[Event];
 
     if (handler == null) {
       return currentState;
     }
-    return handler(currentState, event);
+    return handler(event, currentState);
   }
 }

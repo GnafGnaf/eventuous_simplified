@@ -7,10 +7,21 @@ part 'minesweeper_game_state.freezed.dart';
 
 @freezed
 class MinesweeperGameState
-    with _$MinesweeperGameState, StateWithId<MinesweeperGameId> {
+    with _$MinesweeperGameState, TypedIdState<MinesweeperGameId> {
   MinesweeperGameState._();
   factory MinesweeperGameState({required MinesweeperGameId? id}) =
       _MinesweeperGameState;
 
   factory MinesweeperGameState.initial() => MinesweeperGameState(id: null);
+
+  static void changes(On<MinesweeperGameState> on) {
+    on<MinesweeperGameStarted>(onGameStarted);
+  }
+
+  static MinesweeperGameState onGameStarted(
+    MinesweeperGameStarted event,
+    MinesweeperGameState currentState,
+  ) {
+    return currentState;
+  }
 }

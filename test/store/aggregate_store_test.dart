@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/eventuous_simplified.dart';
+import 'package:eventuous_simplified/src/aggregate/event_handler_registry.dart';
+import 'package:eventuous_simplified/src/aggregate/stateful_aggregate.dart';
+import 'package:eventuous_simplified/src/aggregate/typed_id.dart';
 import 'package:eventuous_simplified/src/store/in_memory_event_store.dart';
 import 'package:eventuous_simplified/src/store/store.dart';
 import 'package:test/test.dart';
@@ -65,9 +68,8 @@ void main() {
   });
 }
 
-class TestAggregate extends AggregateWithState<AggregateState> {
-  TestAggregate() : super(initialState: AggregateState());
-
+class TestAggregate extends StatefulAggregate<AggregateState>
+    with TypedId<AggregateState, AggregateId> {
   @override
   String get id => '42';
 
@@ -78,11 +80,22 @@ class TestAggregate extends AggregateWithState<AggregateState> {
     ensureDoesntExist();
     apply(TestCreated(testString));
   }
+
+  @override
+  AggregateState createInitialState() => AggregateState();
+
+  @override
+  void stateChanges(On<AggregateState> on) => AggregateState.changes(on);
 }
 
 class AggregateId {}
 
-class AggregateState {}
+class AggregateState with TypedIdState<AggregateId> {
+  @override
+  AggregateId? get id => AggregateId();
+
+  static changes(On<AggregateState> on) {}
+}
 
 class TestCreated extends Equatable {
   final String test;

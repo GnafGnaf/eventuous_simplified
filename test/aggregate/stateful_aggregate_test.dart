@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import 'package:eventuous_simplified/eventuous_simplified.dart';
-import 'package:eventuous_simplified/src/aggregate/aggregate_library.dart';
+import 'package:eventuous_simplified/src/aggregate/aggregate.dart';
+import 'package:eventuous_simplified/src/aggregate/stateful_aggregate.dart';
+import 'package:eventuous_simplified/src/aggregate/typed_id.dart';
 import 'package:eventuous_simplified/src/exceptions/domain_exception.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';
@@ -10,8 +11,7 @@ void main() {
     final aggregate = BookingAggregate();
     aggregate.book(12);
 
-    expect(aggregate.changes,
-        equals([Booked(bookingId: 'anId', price: 12)]));
+    expect(aggregate.changes, equals([Booked(bookingId: 'anId', price: 12)]));
   });
 
   test('the state gets updated', () {
@@ -49,18 +49,8 @@ void main() {
   });
 }
 
-class BookingAggregate
-    extends AggregateWithStateAndId<BookingState, BookingId> {
-  BookingAggregate() : super(initialState: BookingState.initial());
-
-  @override
-  void registerEventHandlers(
-    EventHandlerRegistry<BookingState> registry,
-  ) {
-    registry.on<Booked>(BookingState.onBooked);
-    registry.on<PriceChanged>(BookingState.onPriceChanged);
-  }
-
+class BookingAggregate extends StatefulAggregate<BookingState>
+    with TypedId<BookingState, BookingId> {
   book(int price) {
     ensureDoesntExist();
     apply(Booked(bookingId: 'anId', price: price));
@@ -70,6 +60,12 @@ class BookingAggregate
     ensureExists();
     apply(PriceChanged(newPrice: newPrice));
   }
+
+  @override
+  BookingState createInitialState() => BookingState.initial();
+
+  @override
+  void stateChanges(On<BookingState> on) => BookingState.changes(on);
 }
 
 @immutable
@@ -106,10 +102,10 @@ class BookingId extends Equatable {
   List<Object> get props => [id];
 }
 
-class BookingState extends Equatable implements StateWithId<BookingId> {
+class BookingState extends Equatable with TypedIdState<BookingId> {
+  final int price;
   @override
   final BookingId? id;
-  final int price;
 
   BookingState({required this.id, required this.price});
 
@@ -119,9 +115,9 @@ class BookingState extends Equatable implements StateWithId<BookingId> {
     return BookingState(id: id ?? this.id, price: price ?? this.price);
   }
 
-  factory BookingState.onBooked(
-    BookingState previousState,
+  static BookingState onBooked(
     Booked event,
+    BookingState previousState,
   ) {
     return previousState.copyWith(
       id: BookingId(event.bookingId),
@@ -129,13 +125,18 @@ class BookingState extends Equatable implements StateWithId<BookingId> {
     );
   }
 
-  factory BookingState.onPriceChanged(
-    BookingState previousState,
+  static BookingState onPriceChanged(
     PriceChanged event,
+    BookingState previousState,
   ) {
     return previousState.copyWith(price: event.newPrice);
   }
 
   @override
   List<Object?> get props => [id, price];
+
+  static changes(On<BookingState> on) {
+    on<Booked>(onBooked);
+    on<PriceChanged>(onPriceChanged);
+  }
 }

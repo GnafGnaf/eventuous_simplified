@@ -1,4 +1,5 @@
-import 'package:eventuous_simplified/eventuous_simplified.dart' show Aggregate;
+import 'package:eventuous_simplified/eventuous_simplified.dart'
+    show AggregateBase;
 import 'package:eventuous_simplified/src/serialization/event_serializer.dart';
 import 'package:eventuous_simplified/src/store/store.dart';
 
@@ -10,7 +11,7 @@ class AggregateStore {
 
   AggregateStore(this._eventStore, this._eventSerializer);
 
-  Future<AppendEventsResult> store<T extends Aggregate>(T aggregate) async {
+  Future<AppendEventsResult> store<T extends AggregateBase>(T aggregate) async {
     if (aggregate.changes.isEmpty) {
       return AppendEventsResult.noOp();
     }
