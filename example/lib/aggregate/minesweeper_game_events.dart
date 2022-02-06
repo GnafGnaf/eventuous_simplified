@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:eventuous_simplified_example/value_object/field_coordinates.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'minesweeper_game_events.g.dart';
@@ -6,9 +7,16 @@ part 'minesweeper_game_events.g.dart';
 @JsonSerializable()
 class MinesweeperGameStarted extends Equatable {
   final String id;
-  final List<Field> minesAt;
+  final List<FieldCoordinates> minesAt;
+  final int width;
+  final int height;
 
-  MinesweeperGameStarted({required this.id, required this.minesAt});
+  MinesweeperGameStarted({
+    required this.id,
+    required this.minesAt,
+    required this.width,
+    required this.height,
+  });
 
   factory MinesweeperGameStarted.fromJson(Map<String, dynamic> json) =>
       _$MinesweeperGameStartedFromJson(json);
@@ -49,16 +57,4 @@ class MinesweeperGameWon extends Equatable {
 
   @override
   List<Object?> get props => [];
-}
-
-@JsonSerializable()
-class Field extends Equatable {
-  final int row, column;
-
-  Field({required this.row, required this.column});
-
-  factory Field.fromJson(Map<String, dynamic> json) => _$FieldFromJson(json);
-
-  @override
-  List<Object?> get props => [row, column];
 }

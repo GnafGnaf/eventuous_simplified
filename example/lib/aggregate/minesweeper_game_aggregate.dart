@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:eventuous_simplified/eventuous_simplified.dart';
+import 'package:eventuous_simplified_example/value_object/field_coordinates.dart';
 import 'package:eventuous_simplified_example/value_object/size.dart';
 
 import '../value_object/mine_field.dart';
@@ -11,14 +14,15 @@ class MinesweeperGameAggregate extends StatefulAggregate<MinesweeperGameState>
 
     size ??= Size.square(mineCount);
 
-    final field = MineField.generate(mineCount: mineCount, size: size);
-
     apply(MinesweeperGameStarted(
       id: MinesweeperGameId.generate().toString(),
       minesAt: [
-        for (final mine in field.mines)
-          Field(row: mine.row, column: mine.column)
+        for (final mine
+            in _generateRandomMines(mineCount: mineCount, size: size))
+          FieldCoordinates(row: mine.row, column: mine.column)
       ],
+      width: size.width,
+      height: size.height,
     ));
   }
 
@@ -41,5 +45,24 @@ class MinesweeperGameAggregate extends StatefulAggregate<MinesweeperGameState>
     if (currentState.data.areAllFieldsRevealed()) {
       apply(MinesweeperGameWon());
     }
+  }
+
+  static List<Cell> _generateRandomMines({
+    required Size size,
+    required int mineCount,
+  }) {
+    final fields = <Cell>[];
+
+    for (var column = 0; column < size.width; column++) {
+      for (var row = 0; row < size.height; row++) {
+        fields.add(Cell(row: row, column: column));
+      }
+    }
+
+    while (fields.length > mineCount) {
+      fields.removeAt(Random().nextInt(fields.length));
+    }
+
+    return fields;
   }
 }

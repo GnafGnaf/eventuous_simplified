@@ -1,4 +1,5 @@
 import 'package:eventuous_simplified_example/aggregate/minesweeper_game.dart';
+import 'package:eventuous_simplified_example/value_object/field_coordinates.dart';
 import 'package:test/test.dart';
 
 void main() {
@@ -25,10 +26,12 @@ void main() {
     final gameStarted = MinesweeperGameStarted(
       id: MinesweeperGameId.generate().toString(),
       minesAt: [
-        Field(row: 1, column: 1),
-        Field(row: 2, column: 0),
-        Field(row: 2, column: 1),
+        FieldCoordinates(row: 0, column: 1),
+        FieldCoordinates(row: 1, column: 0),
+        FieldCoordinates(row: 1, column: 1),
       ],
+      width: 3,
+      height: 3,
     );
 
     test('revealing an empty field', () {
@@ -54,17 +57,20 @@ void main() {
       );
     });
 
-    test('revealing the last mine', () {
+    test('winning', () {
       final game = MinesweeperGameAggregate();
       game.load([gameStarted]);
 
-      game.reveal(row: 1, column: 1);
+      game.reveal(row: 0, column: 0);
+      game.reveal(row: 0, column: 2);
+      game.reveal(row: 1, column: 2);
+      game.reveal(row: 2, column: 0);
+      game.reveal(row: 2, column: 1);
+      game.reveal(row: 2, column: 2);
+
       expect(
-        game.changes,
-        [
-          MinesweeperFieldRevealed(row: 1, column: 1),
-          MinesweeperGameWon(),
-        ],
+        game.changes.last,
+        equals(MinesweeperGameWon()),
       );
     });
   });

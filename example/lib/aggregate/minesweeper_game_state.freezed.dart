@@ -19,10 +19,17 @@ class _$MinesweeperGameStateTearOff {
   const _$MinesweeperGameStateTearOff();
 
   _MinesweeperGameState call(
-      {required MinesweeperGameId? id, List<Cell> minesAt = const []}) {
+      {required MinesweeperGameId? id,
+      List<FieldCoordinates> minesAt = const [],
+      List<FieldCoordinates> revealedAt = const [],
+      required int width,
+      required int height}) {
     return _MinesweeperGameState(
       id: id,
       minesAt: minesAt,
+      revealedAt: revealedAt,
+      width: width,
+      height: height,
     );
   }
 }
@@ -33,7 +40,10 @@ const $MinesweeperGameState = _$MinesweeperGameStateTearOff();
 /// @nodoc
 mixin _$MinesweeperGameState {
   MinesweeperGameId? get id => throw _privateConstructorUsedError;
-  List<Cell> get minesAt => throw _privateConstructorUsedError;
+  List<FieldCoordinates> get minesAt => throw _privateConstructorUsedError;
+  List<FieldCoordinates> get revealedAt => throw _privateConstructorUsedError;
+  int get width => throw _privateConstructorUsedError;
+  int get height => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MinesweeperGameStateCopyWith<MinesweeperGameState> get copyWith =>
@@ -45,7 +55,12 @@ abstract class $MinesweeperGameStateCopyWith<$Res> {
   factory $MinesweeperGameStateCopyWith(MinesweeperGameState value,
           $Res Function(MinesweeperGameState) then) =
       _$MinesweeperGameStateCopyWithImpl<$Res>;
-  $Res call({MinesweeperGameId? id, List<Cell> minesAt});
+  $Res call(
+      {MinesweeperGameId? id,
+      List<FieldCoordinates> minesAt,
+      List<FieldCoordinates> revealedAt,
+      int width,
+      int height});
 }
 
 /// @nodoc
@@ -61,6 +76,9 @@ class _$MinesweeperGameStateCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? minesAt = freezed,
+    Object? revealedAt = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
@@ -70,7 +88,19 @@ class _$MinesweeperGameStateCopyWithImpl<$Res>
       minesAt: minesAt == freezed
           ? _value.minesAt
           : minesAt // ignore: cast_nullable_to_non_nullable
-              as List<Cell>,
+              as List<FieldCoordinates>,
+      revealedAt: revealedAt == freezed
+          ? _value.revealedAt
+          : revealedAt // ignore: cast_nullable_to_non_nullable
+              as List<FieldCoordinates>,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -82,7 +112,12 @@ abstract class _$MinesweeperGameStateCopyWith<$Res>
           $Res Function(_MinesweeperGameState) then) =
       __$MinesweeperGameStateCopyWithImpl<$Res>;
   @override
-  $Res call({MinesweeperGameId? id, List<Cell> minesAt});
+  $Res call(
+      {MinesweeperGameId? id,
+      List<FieldCoordinates> minesAt,
+      List<FieldCoordinates> revealedAt,
+      int width,
+      int height});
 }
 
 /// @nodoc
@@ -100,6 +135,9 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
   $Res call({
     Object? id = freezed,
     Object? minesAt = freezed,
+    Object? revealedAt = freezed,
+    Object? width = freezed,
+    Object? height = freezed,
   }) {
     return _then(_MinesweeperGameState(
       id: id == freezed
@@ -109,7 +147,19 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
       minesAt: minesAt == freezed
           ? _value.minesAt
           : minesAt // ignore: cast_nullable_to_non_nullable
-              as List<Cell>,
+              as List<FieldCoordinates>,
+      revealedAt: revealedAt == freezed
+          ? _value.revealedAt
+          : revealedAt // ignore: cast_nullable_to_non_nullable
+              as List<FieldCoordinates>,
+      width: width == freezed
+          ? _value.width
+          : width // ignore: cast_nullable_to_non_nullable
+              as int,
+      height: height == freezed
+          ? _value.height
+          : height // ignore: cast_nullable_to_non_nullable
+              as int,
     ));
   }
 }
@@ -117,18 +167,30 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MinesweeperGameState extends _MinesweeperGameState {
-  _$_MinesweeperGameState({required this.id, this.minesAt = const []})
+  _$_MinesweeperGameState(
+      {required this.id,
+      this.minesAt = const [],
+      this.revealedAt = const [],
+      required this.width,
+      required this.height})
       : super._();
 
   @override
   final MinesweeperGameId? id;
   @JsonKey()
   @override
-  final List<Cell> minesAt;
+  final List<FieldCoordinates> minesAt;
+  @JsonKey()
+  @override
+  final List<FieldCoordinates> revealedAt;
+  @override
+  final int width;
+  @override
+  final int height;
 
   @override
   String toString() {
-    return 'MinesweeperGameState(id: $id, minesAt: $minesAt)';
+    return 'MinesweeperGameState(id: $id, minesAt: $minesAt, revealedAt: $revealedAt, width: $width, height: $height)';
   }
 
   @override
@@ -137,14 +199,21 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
         (other.runtimeType == runtimeType &&
             other is _MinesweeperGameState &&
             const DeepCollectionEquality().equals(other.id, id) &&
-            const DeepCollectionEquality().equals(other.minesAt, minesAt));
+            const DeepCollectionEquality().equals(other.minesAt, minesAt) &&
+            const DeepCollectionEquality()
+                .equals(other.revealedAt, revealedAt) &&
+            const DeepCollectionEquality().equals(other.width, width) &&
+            const DeepCollectionEquality().equals(other.height, height));
   }
 
   @override
   int get hashCode => Object.hash(
       runtimeType,
       const DeepCollectionEquality().hash(id),
-      const DeepCollectionEquality().hash(minesAt));
+      const DeepCollectionEquality().hash(minesAt),
+      const DeepCollectionEquality().hash(revealedAt),
+      const DeepCollectionEquality().hash(width),
+      const DeepCollectionEquality().hash(height));
 
   @JsonKey(ignore: true)
   @override
@@ -156,13 +225,22 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
 abstract class _MinesweeperGameState extends MinesweeperGameState {
   factory _MinesweeperGameState(
       {required MinesweeperGameId? id,
-      List<Cell> minesAt}) = _$_MinesweeperGameState;
+      List<FieldCoordinates> minesAt,
+      List<FieldCoordinates> revealedAt,
+      required int width,
+      required int height}) = _$_MinesweeperGameState;
   _MinesweeperGameState._() : super._();
 
   @override
   MinesweeperGameId? get id;
   @override
-  List<Cell> get minesAt;
+  List<FieldCoordinates> get minesAt;
+  @override
+  List<FieldCoordinates> get revealedAt;
+  @override
+  int get width;
+  @override
+  int get height;
   @override
   @JsonKey(ignore: true)
   _$MinesweeperGameStateCopyWith<_MinesweeperGameState> get copyWith =>

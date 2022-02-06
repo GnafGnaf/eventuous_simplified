@@ -11,8 +11,10 @@ MinesweeperGameStarted _$MinesweeperGameStartedFromJson(
     MinesweeperGameStarted(
       id: json['id'] as String,
       minesAt: (json['minesAt'] as List<dynamic>)
-          .map((e) => Field.fromJson(e as Map<String, dynamic>))
+          .map((e) => FieldCoordinates.fromJson(e as Map<String, dynamic>))
           .toList(),
+      width: json['width'] as int,
+      height: json['height'] as int,
     );
 
 Map<String, dynamic> _$MinesweeperGameStartedToJson(
@@ -20,6 +22,8 @@ Map<String, dynamic> _$MinesweeperGameStartedToJson(
     <String, dynamic>{
       'id': instance.id,
       'minesAt': instance.minesAt,
+      'width': instance.width,
+      'height': instance.height,
     };
 
 MinesweeperFieldRevealed _$MinesweeperFieldRevealedFromJson(
@@ -48,13 +52,3 @@ MinesweeperGameWon _$MinesweeperGameWonFromJson(Map<String, dynamic> json) =>
 
 Map<String, dynamic> _$MinesweeperGameWonToJson(MinesweeperGameWon instance) =>
     <String, dynamic>{};
-
-Field _$FieldFromJson(Map<String, dynamic> json) => Field(
-      row: json['row'] as int,
-      column: json['column'] as int,
-    );
-
-Map<String, dynamic> _$FieldToJson(Field instance) => <String, dynamic>{
-      'row': instance.row,
-      'column': instance.column,
-    };
