@@ -1,7 +1,5 @@
 import 'package:equatable/equatable.dart';
 import 'package:eventuous_simplified/src/aggregate/aggregate.dart';
-import 'package:eventuous_simplified/src/aggregate/stateful_aggregate.dart';
-import 'package:eventuous_simplified/src/aggregate/typed_id.dart';
 import 'package:eventuous_simplified/src/exceptions/domain_exception.dart';
 import 'package:meta/meta.dart';
 import 'package:test/test.dart';

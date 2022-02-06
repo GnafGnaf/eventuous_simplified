@@ -1,5 +1,4 @@
 import 'package:eventuous_simplified/eventuous_simplified.dart';
-import 'package:eventuous_simplified/src/aggregate/event_handler_registry.dart';
 
 import 'minesweeper_game.dart';
 
