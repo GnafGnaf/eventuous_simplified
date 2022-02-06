@@ -18,9 +18,11 @@ final _privateConstructorUsedError = UnsupportedError(
 class _$MinesweeperGameStateTearOff {
   const _$MinesweeperGameStateTearOff();
 
-  _MinesweeperGameState call({required MinesweeperGameId? id}) {
+  _MinesweeperGameState call(
+      {required MinesweeperGameId? id, List<Field> minesAt = const []}) {
     return _MinesweeperGameState(
       id: id,
+      minesAt: minesAt,
     );
   }
 }
@@ -31,6 +33,7 @@ const $MinesweeperGameState = _$MinesweeperGameStateTearOff();
 /// @nodoc
 mixin _$MinesweeperGameState {
   MinesweeperGameId? get id => throw _privateConstructorUsedError;
+  List<Field> get minesAt => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MinesweeperGameStateCopyWith<MinesweeperGameState> get copyWith =>
@@ -42,7 +45,7 @@ abstract class $MinesweeperGameStateCopyWith<$Res> {
   factory $MinesweeperGameStateCopyWith(MinesweeperGameState value,
           $Res Function(MinesweeperGameState) then) =
       _$MinesweeperGameStateCopyWithImpl<$Res>;
-  $Res call({MinesweeperGameId? id});
+  $Res call({MinesweeperGameId? id, List<Field> minesAt});
 }
 
 /// @nodoc
@@ -57,12 +60,17 @@ class _$MinesweeperGameStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? minesAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as MinesweeperGameId?,
+      minesAt: minesAt == freezed
+          ? _value.minesAt
+          : minesAt // ignore: cast_nullable_to_non_nullable
+              as List<Field>,
     ));
   }
 }
@@ -74,7 +82,7 @@ abstract class _$MinesweeperGameStateCopyWith<$Res>
           $Res Function(_MinesweeperGameState) then) =
       __$MinesweeperGameStateCopyWithImpl<$Res>;
   @override
-  $Res call({MinesweeperGameId? id});
+  $Res call({MinesweeperGameId? id, List<Field> minesAt});
 }
 
 /// @nodoc
@@ -91,12 +99,17 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = freezed,
+    Object? minesAt = freezed,
   }) {
     return _then(_MinesweeperGameState(
       id: id == freezed
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as MinesweeperGameId?,
+      minesAt: minesAt == freezed
+          ? _value.minesAt
+          : minesAt // ignore: cast_nullable_to_non_nullable
+              as List<Field>,
     ));
   }
 }
@@ -104,14 +117,18 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
 /// @nodoc
 
 class _$_MinesweeperGameState extends _MinesweeperGameState {
-  _$_MinesweeperGameState({required this.id}) : super._();
+  _$_MinesweeperGameState({required this.id, this.minesAt = const []})
+      : super._();
 
   @override
   final MinesweeperGameId? id;
+  @JsonKey()
+  @override
+  final List<Field> minesAt;
 
   @override
   String toString() {
-    return 'MinesweeperGameState(id: $id)';
+    return 'MinesweeperGameState(id: $id, minesAt: $minesAt)';
   }
 
   @override
@@ -119,12 +136,15 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _MinesweeperGameState &&
-            const DeepCollectionEquality().equals(other.id, id));
+            const DeepCollectionEquality().equals(other.id, id) &&
+            const DeepCollectionEquality().equals(other.minesAt, minesAt));
   }
 
   @override
-  int get hashCode =>
-      Object.hash(runtimeType, const DeepCollectionEquality().hash(id));
+  int get hashCode => Object.hash(
+      runtimeType,
+      const DeepCollectionEquality().hash(id),
+      const DeepCollectionEquality().hash(minesAt));
 
   @JsonKey(ignore: true)
   @override
@@ -134,12 +154,15 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
 }
 
 abstract class _MinesweeperGameState extends MinesweeperGameState {
-  factory _MinesweeperGameState({required MinesweeperGameId? id}) =
-      _$_MinesweeperGameState;
+  factory _MinesweeperGameState(
+      {required MinesweeperGameId? id,
+      List<Field> minesAt}) = _$_MinesweeperGameState;
   _MinesweeperGameState._() : super._();
 
   @override
   MinesweeperGameId? get id;
+  @override
+  List<Field> get minesAt;
   @override
   @JsonKey(ignore: true)
   _$MinesweeperGameStateCopyWith<_MinesweeperGameState> get copyWith =>

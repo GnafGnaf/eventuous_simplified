@@ -9,10 +9,15 @@ part 'minesweeper_game_state.freezed.dart';
 class MinesweeperGameState
     with _$MinesweeperGameState, TypedIdState<MinesweeperGameId> {
   MinesweeperGameState._();
-  factory MinesweeperGameState({required MinesweeperGameId? id}) =
-      _MinesweeperGameState;
+  factory MinesweeperGameState({
+    required MinesweeperGameId? id,
+    @Default([]) List<Field> minesAt,
+  }) = _MinesweeperGameState;
 
-  factory MinesweeperGameState.initial() => MinesweeperGameState(id: null);
+  factory MinesweeperGameState.initial() => MinesweeperGameState(
+        id: null,
+        minesAt: <Field>[],
+      );
 
   static void changes(On<MinesweeperGameState> on) {
     on<MinesweeperGameStarted>(onGameStarted);
@@ -22,6 +27,6 @@ class MinesweeperGameState
     MinesweeperGameStarted event,
     MinesweeperGameState currentState,
   ) {
-    return currentState;
+    return currentState.copyWith(id: MinesweeperGameId(event.id));
   }
 }
