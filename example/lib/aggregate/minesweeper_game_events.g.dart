@@ -22,6 +22,33 @@ Map<String, dynamic> _$MinesweeperGameStartedToJson(
       'minesAt': instance.minesAt,
     };
 
+MinesweeperFieldRevealed _$MinesweeperFieldRevealedFromJson(
+        Map<String, dynamic> json) =>
+    MinesweeperFieldRevealed(
+      row: json['row'] as int,
+      column: json['column'] as int,
+    );
+
+Map<String, dynamic> _$MinesweeperFieldRevealedToJson(
+        MinesweeperFieldRevealed instance) =>
+    <String, dynamic>{
+      'row': instance.row,
+      'column': instance.column,
+    };
+
+MinesweeperGameLost _$MinesweeperGameLostFromJson(Map<String, dynamic> json) =>
+    MinesweeperGameLost();
+
+Map<String, dynamic> _$MinesweeperGameLostToJson(
+        MinesweeperGameLost instance) =>
+    <String, dynamic>{};
+
+MinesweeperGameWon _$MinesweeperGameWonFromJson(Map<String, dynamic> json) =>
+    MinesweeperGameWon();
+
+Map<String, dynamic> _$MinesweeperGameWonToJson(MinesweeperGameWon instance) =>
+    <String, dynamic>{};
+
 Field _$FieldFromJson(Map<String, dynamic> json) => Field(
       row: json['row'] as int,
       column: json['column'] as int,

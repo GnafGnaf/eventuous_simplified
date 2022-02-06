@@ -21,7 +21,7 @@ class EventHandlerRegistry<State> {
   }
 
   State when<Event extends Object>(Event event, State currentState) {
-    var handler = _handlers[Event];
+    var handler = _handlers[event.runtimeType];
 
     if (handler == null) {
       return currentState;

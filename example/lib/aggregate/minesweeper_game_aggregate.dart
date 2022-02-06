@@ -28,4 +28,18 @@ class MinesweeperGameAggregate extends StatefulAggregate<MinesweeperGameState>
   @override
   void stateChanges(On<MinesweeperGameState> on) =>
       MinesweeperGameState.changes(on);
+
+  void reveal({required int row, required int column}) {
+    ensureExists();
+    apply(MinesweeperFieldRevealed(row: row, column: column));
+
+    if (currentState.data.isMineAt(row: row, column: column)) {
+      apply(MinesweeperGameLost());
+      return;
+    }
+
+    if (currentState.data.areAllFieldsRevealed()) {
+      apply(MinesweeperGameWon());
+    }
+  }
 }

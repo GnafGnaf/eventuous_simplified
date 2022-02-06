@@ -12,6 +12,18 @@ void main() {
     expect(aggregate.changes, equals([Booked(bookingId: 'anId', price: 12)]));
   });
 
+  test('loadEvents brings the aggregate in the correct state', () {
+    final aggregate = BookingAggregate();
+    aggregate.load([
+      Booked(bookingId: 'anId', price: 12),
+      PriceChanged(newPrice: 23),
+    ]);
+
+    expect(aggregate.currentVersion, 1);
+    expect(aggregate.currentState.data.id.toString(),'anId');
+    expect(aggregate.currentState.data.price, 23);
+  });
+
   test('the state gets updated', () {
     final aggregate = BookingAggregate();
     aggregate.book(12);

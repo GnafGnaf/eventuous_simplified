@@ -19,7 +19,7 @@ class _$MinesweeperGameStateTearOff {
   const _$MinesweeperGameStateTearOff();
 
   _MinesweeperGameState call(
-      {required MinesweeperGameId? id, List<Field> minesAt = const []}) {
+      {required MinesweeperGameId? id, List<Cell> minesAt = const []}) {
     return _MinesweeperGameState(
       id: id,
       minesAt: minesAt,
@@ -33,7 +33,7 @@ const $MinesweeperGameState = _$MinesweeperGameStateTearOff();
 /// @nodoc
 mixin _$MinesweeperGameState {
   MinesweeperGameId? get id => throw _privateConstructorUsedError;
-  List<Field> get minesAt => throw _privateConstructorUsedError;
+  List<Cell> get minesAt => throw _privateConstructorUsedError;
 
   @JsonKey(ignore: true)
   $MinesweeperGameStateCopyWith<MinesweeperGameState> get copyWith =>
@@ -45,7 +45,7 @@ abstract class $MinesweeperGameStateCopyWith<$Res> {
   factory $MinesweeperGameStateCopyWith(MinesweeperGameState value,
           $Res Function(MinesweeperGameState) then) =
       _$MinesweeperGameStateCopyWithImpl<$Res>;
-  $Res call({MinesweeperGameId? id, List<Field> minesAt});
+  $Res call({MinesweeperGameId? id, List<Cell> minesAt});
 }
 
 /// @nodoc
@@ -70,7 +70,7 @@ class _$MinesweeperGameStateCopyWithImpl<$Res>
       minesAt: minesAt == freezed
           ? _value.minesAt
           : minesAt // ignore: cast_nullable_to_non_nullable
-              as List<Field>,
+              as List<Cell>,
     ));
   }
 }
@@ -82,7 +82,7 @@ abstract class _$MinesweeperGameStateCopyWith<$Res>
           $Res Function(_MinesweeperGameState) then) =
       __$MinesweeperGameStateCopyWithImpl<$Res>;
   @override
-  $Res call({MinesweeperGameId? id, List<Field> minesAt});
+  $Res call({MinesweeperGameId? id, List<Cell> minesAt});
 }
 
 /// @nodoc
@@ -109,7 +109,7 @@ class __$MinesweeperGameStateCopyWithImpl<$Res>
       minesAt: minesAt == freezed
           ? _value.minesAt
           : minesAt // ignore: cast_nullable_to_non_nullable
-              as List<Field>,
+              as List<Cell>,
     ));
   }
 }
@@ -124,7 +124,7 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
   final MinesweeperGameId? id;
   @JsonKey()
   @override
-  final List<Field> minesAt;
+  final List<Cell> minesAt;
 
   @override
   String toString() {
@@ -156,13 +156,13 @@ class _$_MinesweeperGameState extends _MinesweeperGameState {
 abstract class _MinesweeperGameState extends MinesweeperGameState {
   factory _MinesweeperGameState(
       {required MinesweeperGameId? id,
-      List<Field> minesAt}) = _$_MinesweeperGameState;
+      List<Cell> minesAt}) = _$_MinesweeperGameState;
   _MinesweeperGameState._() : super._();
 
   @override
   MinesweeperGameId? get id;
   @override
-  List<Field> get minesAt;
+  List<Cell> get minesAt;
   @override
   @JsonKey(ignore: true)
   _$MinesweeperGameStateCopyWith<_MinesweeperGameState> get copyWith =>
