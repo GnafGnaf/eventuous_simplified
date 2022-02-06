@@ -21,7 +21,7 @@ class AggregateStore {
       aggregate.originalVersion,
     );
 
-    _eventStore.appendEvents(
+    return _eventStore.appendEvents(
       streamName,
       expectedStreamVersion,
       [
@@ -36,7 +36,5 @@ class AggregateStore {
         ),
       ],
     );
-
-    return AppendEventsResult.noOp();
   }
 }

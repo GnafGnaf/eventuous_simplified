@@ -61,7 +61,22 @@ void main() {
       );
     });
 
-    test('optimistic concurrency', () {});
+    test('optimistic concurrency', () async {
+      var testAggregate = TestAggregate();
+      testAggregate.testCreated('test');
+
+      var conflicting = TestAggregate();
+      conflicting.testCreated('test');
+
+      await aggregateStore.store(testAggregate);
+
+      expect(
+        () async => aggregateStore.store(conflicting),
+        throwsA(
+          isA<Exception>(),
+        ),
+      );
+    });
   });
 }
 
