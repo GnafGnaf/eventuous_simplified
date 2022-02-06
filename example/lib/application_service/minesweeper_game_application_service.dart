@@ -7,9 +7,19 @@ class MinesweeperGameApplicationService {
 
   MinesweeperGameApplicationService(this._aggregateStore);
 
-  startNewGame() {
+  startNewGame() async {
     final game = MinesweeperGameAggregate();
     game.startGame();
-    _aggregateStore.store(game);
+    await _aggregateStore.store(game);
+  }
+
+  revealField({
+    required int row,
+    required int column,
+    required String gameId,
+  }) async {
+    final game = await _aggregateStore.load(gameId, MinesweeperGameAggregate());
+    game.reveal(row: row, column: column);
+    await _aggregateStore.store(game);
   }
 }

@@ -1,5 +1,6 @@
 import 'package:eventuous_simplified/eventuous_simplified.dart'
     show AggregateBase;
+import 'package:eventuous_simplified/src/aggregate/aggregate.dart';
 import 'package:eventuous_simplified/src/serialization/event_serializer.dart';
 import 'package:eventuous_simplified/src/store/store.dart';
 
@@ -28,7 +29,7 @@ class AggregateStore {
         ...aggregate.changes.map(
           (change) {
             return StreamEvent(
-              payload: _eventSerializer.serializeEvent(change),
+              serializedEvent: _eventSerializer.serializeEvent(change),
               contentType: _eventSerializer.contentType,
               position: -1,
             );
@@ -36,5 +37,37 @@ class AggregateStore {
         ),
       ],
     );
+  }
+
+  // Todo: create aggregate factory so i don't have to change a parameter
+  Future<Aggregate> load<Aggregate extends AggregateBase>(
+    String id,
+    Aggregate aggregate,
+  ) async {
+    final streamName = StreamName.forId<Aggregate>(id);
+
+    final batchCount = 0;
+    final batchSize = 500;
+    while (true) {
+      final events = await _eventStore.readEvents(
+        streamName,
+        StreamReadPosition(batchCount * batchSize),
+        batchSize,
+      );
+
+      aggregate.load([
+        for (final event in events)
+          _eventSerializer.deserializeEvent(
+            event.serializedEvent.payload,
+            event.serializedEvent.eventType,
+          )
+      ]);
+
+      if (events.length < batchSize) {
+        break;
+      }
+    }
+
+    return aggregate;
   }
 }

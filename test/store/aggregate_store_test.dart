@@ -38,7 +38,7 @@ void main() {
 
     test('saves changes', () async {
       var testAggregate = TestAggregate();
-      testAggregate.testCreated('test');
+      testAggregate.testCreated('test', AggregateId('testId'));
 
       final stream = StreamName.forId<TestAggregate>(testAggregate.id);
 
@@ -50,23 +50,23 @@ void main() {
         99,
       );
 
-      final payload = savedEvents.single.payload as Serialized;
+      final payload = savedEvents.single.serializedEvent as Serialized;
 
       final savedEvent =
           serializers.deserializeEvent(payload.payload, payload.eventType);
 
       expect(
         savedEvent,
-        equals(TestCreated('test')),
+        equals(TestCreated('test', 'testId')),
       );
     });
 
     test('optimistic concurrency', () async {
       var testAggregate = TestAggregate();
-      testAggregate.testCreated('test');
+      testAggregate.testCreated('test', AggregateId('testId'));
 
       var conflicting = TestAggregate();
-      conflicting.testCreated('test');
+      conflicting.testCreated('test', AggregateId('testId'));
 
       await aggregateStore.store(testAggregate);
 
@@ -78,16 +78,30 @@ void main() {
       );
     });
   });
+
+  group('load', () {
+    test('load a saved instance', () async {
+      final testAggregate = TestAggregate();
+      testAggregate.testCreated('testme123', AggregateId('testId'));
+      await aggregateStore.store(testAggregate);
+
+      final loaded =
+          await aggregateStore.load(testAggregate.id, TestAggregate());
+
+      expect(loaded.currentState.data, equals(testAggregate.currentState.data));
+      expect(
+        loaded.currentState.version,
+        equals(testAggregate.currentState.version),
+      );
+    });
+  });
 }
 
 class TestAggregate extends StatefulAggregate<AggregateState>
     with TypedId<AggregateState, AggregateId> {
-  @override
-  String get id => '42';
-
-  void testCreated(String testString) {
+  void testCreated(String testString, AggregateId testId) {
     ensureDoesntExist();
-    apply(TestCreated(testString));
+    apply(TestCreated(testString, testId.toString()));
   }
 
   @override
@@ -97,28 +111,57 @@ class TestAggregate extends StatefulAggregate<AggregateState>
   void stateChanges(On<AggregateState> on) => AggregateState.changes(on);
 }
 
-class AggregateId {}
+class AggregateId extends Equatable {
+  final String value;
 
-class AggregateState with TypedIdState<AggregateId> {
+  AggregateId(this.value);
+
   @override
-  AggregateId? get id => AggregateId();
+  String toString() => value;
 
-  static changes(On<AggregateState> on) {}
+  @override
+  List<Object?> get props => [value];
+}
+
+class AggregateState extends Equatable with TypedIdState<AggregateId> {
+  final String testString;
+
+  AggregateState({this.testString = '', this.id});
+
+  @override
+  final AggregateId? id;
+
+  static changes(On<AggregateState> on) {
+    on<TestCreated>(onTestCreated);
+  }
+
+  static AggregateState onTestCreated(
+      TestCreated event, AggregateState currentState) {
+    return AggregateState(
+      testString: event.test,
+      id: AggregateId(event.id),
+    );
+  }
+
+  @override
+  List<Object?> get props => [id, testString];
 }
 
 class TestCreated extends Equatable {
   final String test;
 
-  TestCreated(this.test);
+  final String id;
+
+  TestCreated(this.test, this.id);
 
   factory TestCreated.fromJson(Map<String, dynamic> json) {
-    return TestCreated(json['test']);
+    return TestCreated(json['test'], json['id']);
   }
 
   Map<String, dynamic> toJson() {
-    return {'test': test};
+    return {'test': test, 'id': id};
   }
 
   @override
-  List<Object?> get props => [test];
+  List<Object?> get props => [test, id];
 }
