@@ -24,8 +24,10 @@ workflows:
     jobs:
       - install-install_sdk_and_pub
       - flutter/lint:
+          version: '2.10.0' 
           requires:
             - install-install_sdk_and_pub
       - flutter/unit_test:
+          version: '2.10.0' 
           requires:
             - install-install_sdk_and_pub
